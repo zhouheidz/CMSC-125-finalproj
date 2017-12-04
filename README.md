@@ -9,8 +9,6 @@ Final project in CMSC 125, Operating Systems
 
 ## Files
 
-<br>
-
 ### ChiuShell.c
 The source code, written in C. It contains all implementations of selected Windows command line interpreter commands
 
@@ -21,8 +19,6 @@ The executable file, emulating selected processes and behaviors of a Windows com
 
 ## Compilation
 
-<br>
-
 Type in the following text in the shell. 
 ```
 gcc ChiuShell.c -o ChiuShell
@@ -31,8 +27,6 @@ gcc ChiuShell.c -o ChiuShell
 <br><br>
 
 ## Required Commands
-
-<br>
 
 ### CD
 Displays the name of or changes the current directory
@@ -205,8 +199,6 @@ Displays the contents of a text file
 <br><br>
 
 ## Additional Commands
-
-<br>
 
 ### EXIT
 Closes the shell
