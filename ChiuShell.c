@@ -11,6 +11,13 @@
 #include <math.h>
 #include <wchar.h>
 
+/*
+* Function: readLine
+* ------------------
+* reads the input of the user and stores it into a string
+*
+* returns: the line being read
+*/
 char *readLine() {
 
 	char *line = NULL;
@@ -20,7 +27,17 @@ char *readLine() {
 	return line;
 }
 
-#define TOKEN_SIZE 64
+/*
+* Function: tokenize
+* ------------------
+* converts a string into an array of strings
+*
+* line: the input string to be separated into tokens
+* delimeters: the string that contains symbols to separate line into tokens
+*
+* returns: an array of strings 
+*/
+#define TOKEN_SIZE 128
 char **tokenize(char *line, char *delimeters) {
 	int bufsize = TOKEN_SIZE;
 	int position = 0;
@@ -52,13 +69,25 @@ char **tokenize(char *line, char *delimeters) {
 	return tokens;
 }
 
-char getDir() {
+/*
+* Function: getDir
+* ----------------
+* displays the current directory 
+*/
+void getDir() {
 	char cwd[1024];
 	getcwd(cwd, sizeof(cwd));
 	printf(cwd);
 	printf(">");
 }
 
+/*
+* Function: lowerStr
+* ------------------
+* converts a string to its lowercase version
+* 
+* returns: a lowercase version of the string
+*/
 char *lowerStr(char *str) {
 	for(int i = 0; str[i]; i++){
 	  str[i] = tolower(str[i]);
@@ -67,6 +96,15 @@ char *lowerStr(char *str) {
 	return str;
 }
 
+/*
+* Function countSlash
+* -------------------
+* counts how many slashes are in the string
+*
+* string: the given string to be check
+*
+* returns: the numver of slashes in the string
+*/
 int countSlash(char* string) {
 	int size = strlen(string);
 	int slashes = 0;
@@ -78,6 +116,15 @@ int countSlash(char* string) {
 	return slashes;
 }
 
+/*
+* Function: countArgs
+* -------------------
+* counts how many arguments there are in a token, excluding the cmd commands
+*
+* tokens: array of strings
+*
+* returns: the number of tokens -1
+*/
 int countArgs(char **tokens) {
 	int noOfArgs = -1;
 	char **temp = tokens;
@@ -88,6 +135,7 @@ int countArgs(char **tokens) {
 	}
 	return noOfArgs;
 }
+
 
 int getStrSize(char *string) {
 	return sizeof(string);
@@ -282,6 +330,9 @@ int handlecopy(char **tokens) {
 	int filesCopied = 0;
 	FILE *fp1;
 	FILE *fp2;
+	char **filetokens;
+	char *filename;
+	int fileidx;
 	char c;
 	char *line;
 	char cwd[1024];
@@ -290,69 +341,84 @@ int handlecopy(char **tokens) {
 
 	if(noOfArgs == 0 ) {
 		incorrect();
+		return 1;
 	} else if(noOfArgs == 1) {
 		printf("The file cannot be copied onto itself.\n");
+		return 1;
 	} else if (noOfArgs > 2) {
-		for(int i = 0; i < noOfArgs-1; i++) {
+		for(int i = 1; i < noOfArgs; i++) {
 			if(fileType(tokens[i]) == 0) {
 				incorrect();
 			} else if(fileType(tokens[i]) == 1) {
-				if(fileType(tokens[noOfArgs]) == 0) {
-					fp2 = fopen(dir, "r");
-					if(fp2 == NULL) {
-						fp2 = fopen(dir, "w");
-						while((c = getc(fp1)) != EOF) {
-							if(fputc(c, fp2) == -1) {
-								filesCopied--;
-								break;
+				// fp1 = fopen(tokens[i], "r");
+				if((fp1 = fopen(tokens[i], "r")) == NULL) {
+					cantFind();
+				} else {
+					if(fileType(tokens[noOfArgs]) == 0) {
+						filetokens = tokenize(tokens[i], "\\");
+						fileidx = countArgs(filetokens);
+						filename = filetokens[fileidx];
+						strcpy(dir, tokens[noOfArgs]);
+						strcat(dir, "\\");
+						strcat(dir, filename);
+						fp2 = fopen(dir, "r");
+						if(fp2 == NULL) {
+							fp2 = fopen(dir, "w");
+							while((c = getc(fp1)) != EOF) {
+								if(fputc(c, fp2) == -1) {
+									filesCopied--;
+									break;
+								}
 							}
+							filesCopied++;
+						} else {
+							while(1) {
+								askOverwrite(dir);
+								chdir(cwd);
+								line = lowerStr(readLine());
+								if(strstr(line, "yes") != NULL ||
+								   strstr(line, "y")  != NULL ||
+								   strstr(line, "all") != NULL||
+								   strstr(line, "a") != NULL) {
+									remove(tokens[i]);
+									fp2 = fopen(dir, "w");
+									while((c = getc(fp1)) != EOF) {
+										fputc(c, fp2);
+									}
+									filesCopied++;
+									break;
+								} else if(strstr(line, "no") != NULL ||
+										  strstr(line, "n") != NULL) {
+									break;
+								} else {
+									continue;
+								}
+							}	
 						}
-						filesCopied++;
+						free(dir);
 						fclose(fp1);
 						fclose(fp2);
-						remove(tokens[i]);
+					} else if(fileType(tokens[noOfArgs]) == 1) {
+						incorrect();
 					} else {
-						while(1) {
-							askOverwrite(dir);
-							chdir(cwd);
-							line = lowerStr(readLine());
-							if(strstr(line, "yes") != NULL ||
-							   strstr(line, "y")  != NULL ||
-							   strstr(line, "all") != NULL||
-							   strstr(line, "a") != NULL) {
-								remove(tokens[i]);
-								fp2 = fopen(dir, "w");
-								while((c = getc(fp1)) != EOF) {
-									fputc(c, fp2);
-								}
-								filesCopied++;
-								fclose(fp1);
-								fclose(fp2);
-								remove(tokens[i]);
-								break;
-							} else if(strstr(line, "no") != NULL ||
-									  strstr(line, "n") != NULL) {
-								break;
-							} else {
-								continue;
-							}
-						}	
+						incorrect();
 					}
-					printf("\t%d file(s) copied.", filesCopied);
-				} else if(fileType(tokens[noOfArgs]) == 1) {
-					incorrect();
-				} else {
-					incorrect();
 				}
+					
 			} else {
 				incorrect();
-			}
-			free(dir);
+				return 1;
+			}	
 		}
+		free(dir);
+		fclose(fp1);
+		fclose(fp2);
+		printf("\t%d file(s) copied.", filesCopied);
 	} else {
-		fp1 = fopen(tokens[1], "r");
-		if(fp1 == NULL) {
+		// fp1 = fopen(tokens[1], "r");
+		if((fp1= fopen(tokens[1], "r")) == NULL) {
 			cantFind();
+			return 1;
 		} else {
 			fileType(tokens[2]);
 			fp2 = fopen(tokens[2], "r");
