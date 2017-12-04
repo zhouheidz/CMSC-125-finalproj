@@ -136,11 +136,28 @@ int countArgs(char **tokens) {
 	return noOfArgs;
 }
 
-
+/*
+* Function getStrSize
+* -------------------
+* counts the number of characters in a string
+*
+* string: the string
+*
+* returns: the size of the string
+*/
 int getStrSize(char *string) {
 	return sizeof(string);
 }
 
+/*
+* Function getStrSize2
+* --------------------
+* counts the number of characters in a string
+*
+* string: the string
+*
+* returns: the size of the string
+*/
 int getStrSize2(char *string) {
 	int i = 0;
 	while(1) {
@@ -154,20 +171,45 @@ int getStrSize2(char *string) {
 	return i;
 }
 
+/*
+* Function: incorrect
+* -------------------
+* prints a statement declaring that the command is incorrect
+*/
 void incorrect() {
 	printf("The syntax of the command is incorrect.\n");
 }
 
+/*
+* Function: cantFind
+* ------------------
+* prints a statement declaring that the given file is nonexistent
+*/
 void cantFind() {
 	printf("The system cannot find the file specified.\n");
 }
 
+/*
+* Function: askOverwrite
+* -------------------
+* prints a statement confirming whether the user would want to overwrite a file
+*/
 void askOverwrite(char *directory) {
 	char full[_MAX_PATH];
 	_fullpath(full, directory, _MAX_PATH);
 	printf("Overwrite %s? (Yes/No/All): ", full);
 }
 
+/*
+* Function: fileType
+* ------------------
+* determines whether the given path is a path to a dir or a file
+*
+* path: string to a file or dir
+*
+* returns: 0 if the path is to a dir
+*		   1 if the path is to a file
+*/
 int fileType(char *path) {
 	struct stat statbuf;
 	stat(path, &statbuf);
@@ -179,6 +221,16 @@ int fileType(char *path) {
 	}
 }
 
+/*
+* Function: timeformat
+* --------------------
+* checks whether the given string is written in correct time format
+*
+* string: the string
+*
+* returns: 0 if it's a wrong format
+*		   the specified time in time_t format as defined by time.h
+*/
 int timeformat(char *string) {
 	char **tokens = tokenize(string, ":");
 	struct tm breakdown = {0};
@@ -206,6 +258,16 @@ int timeformat(char *string) {
 	return mktime(&breakdown);
 }
 
+/*
+* Function: dateformat
+* --------------------
+* checks whether the given string is written in correct date format
+*
+* string: the string
+*
+* returns: 0 if it's a wrong format
+*		   the specified date in time_t format as defined by time.h
+*/
 int dateformat(char *string) {
 	char **tokens = tokenize(string, "-/");
 	struct tm breakdown = {0};
@@ -233,7 +295,13 @@ int dateformat(char *string) {
 	return mktime(&breakdown);
 }
 
-
+/*
+* Function: handlecd
+* ------------------
+* handles a command that starts with a 'cd' or 'chdir' keyword
+* 
+* returns: 1 after executing the cd command
+*/
 int handlecd(char **tokens) {
 	int noOfArgs = countArgs(tokens);
 
@@ -253,6 +321,15 @@ int handlecd(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: handlecls
+* -------------------
+* clears the screen when the user types 'cls'
+*
+* hConsole: a handle to the specified standard device
+*
+* returns: 1 after executing the cd command
+*/
 int handlecls(HANDLE hConsole) {
 	
 	COORD coordScreen = { 0, 0 };
@@ -284,6 +361,13 @@ int handlecls(HANDLE hConsole) {
 	return 1;
 }
 
+/*
+* Function: handlecmd
+* -------------------
+* displays the information of the shell
+*
+* returns: 1 after executing the cd command
+*/
 int handlecmd() {
 
 	DWORD dwVersion = 0; 
@@ -308,6 +392,15 @@ int handlecmd() {
 	return 1;
 }
 
+/*
+* Function: handledel
+* -------------------
+* deletes the given file
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 int handledel(char **tokens) {
 	int i = 1;
 	char cwd[1024];
@@ -325,6 +418,15 @@ int handledel(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: handlecopy
+* --------------------
+* copies files
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 int handlecopy(char **tokens) {
 	int noOfArgs = countArgs(tokens);
 	int filesCopied = 0;
@@ -350,7 +452,6 @@ int handlecopy(char **tokens) {
 			if(fileType(tokens[i]) == 0) {
 				incorrect();
 			} else if(fileType(tokens[i]) == 1) {
-				// fp1 = fopen(tokens[i], "r");
 				if((fp1 = fopen(tokens[i], "r")) == NULL) {
 					cantFind();
 				} else {
@@ -415,7 +516,6 @@ int handlecopy(char **tokens) {
 		fclose(fp2);
 		printf("\t%d file(s) copied.", filesCopied);
 	} else {
-		// fp1 = fopen(tokens[1], "r");
 		if((fp1= fopen(tokens[1], "r")) == NULL) {
 			cantFind();
 			return 1;
@@ -473,6 +573,15 @@ int handlecopy(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: handledate
+* --------------------
+* displays the date
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 int handledate(char **tokens) {
 	int noOfArgs = countArgs(tokens);
 	time_t t = time(NULL);
@@ -502,6 +611,15 @@ int handledate(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: handledir
+* -------------------
+* displays contents and details about the directory
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 void handledir(DIR *dp) {
     struct dirent *dir;
     dp = opendir(".");
@@ -563,7 +681,15 @@ void handledir(DIR *dp) {
     }
 }
 
-
+/*
+* Function: handlemkdir
+* ---------------------
+* creates a new directory
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 int handlemkdir(char **tokens) {
 	int noOfArgs = countArgs(tokens);
 
@@ -581,6 +707,15 @@ int handlemkdir(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: handlemove
+* --------------------
+* moves files
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 int handlemove(char **tokens) {
 	int noOfArgs = countArgs(tokens);
 	FILE *fp1;
@@ -667,6 +802,15 @@ int handlemove(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: handlerename
+* ----------------------
+* renames files
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 int handlerename(char **tokens) {
 	
 	int noOfArgs = countArgs(tokens);
@@ -721,6 +865,15 @@ int handlerename(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: handlermdir
+* ---------------------
+* removes directory
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 int handlermdir(char **tokens) {
 	int i = 1;
 
@@ -734,6 +887,15 @@ int handlermdir(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: handletime
+* --------------------
+* displays the time
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 int handletime(char **tokens) {
 	int noOfArgs = countArgs(tokens);
 	time_t t = time(NULL);
@@ -766,6 +928,15 @@ int handletime(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: handletype
+* --------------------
+* displays the contents of a file
+*
+* tokens: an array of strings
+*
+* returns: 1 after executing the cd command
+*/
 int handletype(char **tokens) {
 	int noOfArgs = countArgs(tokens);
 	int i = 1;
@@ -792,6 +963,16 @@ int handletype(char **tokens) {
 	return 1;
 }
 
+/*
+* Function: executeCommand
+* ------------------------
+* handles commands and calls the appropriate functions for each command
+*
+* tokens: an array of strings
+*
+* returns: 1 to continue handling commands
+*		   0 to end process
+*/
 int executeCommand(char **tokens) {
 	char *cmd = lowerStr(tokens[0]);
 
