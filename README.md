@@ -6,10 +6,10 @@ Final project in CMSC 125, Operating Systems
 
 ## Files
 
-* ChiuShell.c
+ChiuShell.c
 > The source code, written in C. It contains all implementations of selected Windows command line interpreter commands
 
-* ChiuShell.exe
+ChiuShell.exe
 > The executable file, emulating selected processes and behaviors of a Windows command line interpreter
 
 ## Compilation
