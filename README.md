@@ -33,11 +33,14 @@ Displays the name of or changes the current directory
 
 ###### Syntax
 ```
-
+CD [..]
+```
+```
+CD [drive:][path]
 ```
 ###### Example
 ```
-
+cd D:/College_stuff/cmsc 125/cmsc-125-finalproj 
 ```
 
 ### CHDIR
@@ -45,11 +48,14 @@ Changes the current directory
 
 ###### Syntax
 ```
-
+CHDIR [..]
+```
+```
+CHDIR [drive:][path]
 ```
 ###### Example
 ```
-
+chdir D:/College_stuff/cmsc 125/cmsc-125-finalproj 
 ```
 
 ### CLS
