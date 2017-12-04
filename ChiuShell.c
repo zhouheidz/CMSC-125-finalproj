@@ -731,7 +731,11 @@ int executeCommand(char **tokens) {
 
 	if(strcmp("cd", cmd) == 0 || strcmp("chdir", cmd) == 0) {
 		return handlecd(tokens);
-	} else if(strcmp("cls", cmd) == 0) {
+	} else if(strcmp("cd..", cmd) == 0) {
+		tokens[0] = "cd";
+		tokens[1] = "..";
+		return handlecd(tokens);
+	}else if(strcmp("cls", cmd) == 0) {
 		HANDLE hStdout;
 		hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
 		return handlecls(hStdout);
