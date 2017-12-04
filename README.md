@@ -29,7 +29,7 @@ gcc ChiuShell.c -o ChiuShell
 ## Required Commands
 
 ### CD
-Displays the name of or changes the current directory
+Changes the current directory
 
 ###### Syntax
 ```
@@ -63,11 +63,7 @@ Clears the screen
 
 ###### Syntax
 ```
-
-```
-###### Example
-```
-
+cls
 ```
 
 ### CMD
@@ -75,11 +71,7 @@ Starts a new instance of the command interpreter
 
 ###### Syntax
 ```
-
-```
-###### Example
-```
-
+cmd
 ```
 
 ### COPY
@@ -87,8 +79,15 @@ Copies one or more files to another location
 
 ###### Syntax
 ```
-
+copy [source][destination]
 ```
+where source is the file to be copied,
+destination may be a directory or a new filename for the file to be copied
+```
+copy [source1][source2][...] [destination]
+```
+where source1, source2, and etc. are multiple files that will be copied,
+destination is strictly a directory
 ###### Example
 ```
 
