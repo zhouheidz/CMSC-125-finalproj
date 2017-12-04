@@ -90,19 +90,25 @@ where source1, source2, and etc. are multiple files that will be copied,
 destination is strictly a directory
 ###### Example
 ```
-
+copy text1.txt text2.txt
+```
+```
+copy text1.txt folder\subfolder
+```
+```
+copy folder\text1.txt subfolder\text1copy.txt
 ```
 
 ### DATE
-Displays or sets the date
+Displays or sets the date. The user cannot set the date due to administrator rights.
 
 ###### Syntax
 ```
-
+date [date]
 ```
 ###### Example
 ```
-
+date 12/07/2017
 ```
 
 ### DEL
@@ -110,11 +116,11 @@ Deletes one or more files
 
 ###### Syntax
 ```
-
+del [file1][...]
 ```
 ###### Example
 ```
-
+del text1.txt folder\text1.txt
 ```
 
 ### DIR
@@ -122,11 +128,11 @@ Displays a list of files and subdirectories in a directory
 
 ###### Syntax
 ```
-
+dir [path]
 ```
 ###### Example
 ```
-
+dir folder\subfolder
 ```
 
 ### MKDIR
@@ -134,35 +140,47 @@ Creates a directory
 
 ###### Syntax
 ```
-
+mkdir [dirname]
 ```
 ###### Example
 ```
-
+mkdir newfolder
 ```
 
 ### MOVE
 Moves one or more files from one directory to another directory
 
-###### Syntax
 ```
-
+move [source][destination]
 ```
+where source is the file to be moved,
+destination may be a directory or a new filename for the file to be moved
+```
+move [source1][source2][...] [destination]
+```
+where source1, source2, and etc. are multiple files that will be moved,
+destination is strictly a directory
 ###### Example
 ```
-
+move text1.txt text2.txt
+```
+```
+move text1.txt folder\subfolder
+```
+```
+move folder\text1.txt subfolder\text1copy.txt
 ```
 
 ### RENAME
-Renames a file or files
+Renames a file
 
 ###### Syntax
 ```
-
+rename [oldname][newname]
 ```
 ###### Example
 ```
-
+rename text1.txt newtext1.txt
 ```
 
 ### RMDIR
@@ -170,23 +188,23 @@ Removes a directory
 
 ###### Syntax
 ```
-
+rmdir [dirname]
 ```
 ###### Example
 ```
-
+rmdir folder
 ```
 
 ### TIME
-Displays or sets the system time
+Displays or sets the system time. The user cannot set the time due to administrator rights.
 
 ###### Syntax
 ```
-
+time [time]
 ```
 ###### Example
 ```
-
+time 11:11:11
 ```
 
 ### TYPE
@@ -194,11 +212,11 @@ Displays the contents of a text file
 
 ###### Syntax
 ```
-
+type [filename]
 ```
 ###### Example
 ```
-
+type text1.txt
 ```
 
 <br><br>
@@ -210,9 +228,5 @@ Closes the shell
 
 ###### Syntax
 ```
-
-```
-###### Example
-```
-
+exit
 ```

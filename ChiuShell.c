@@ -10,6 +10,7 @@
 #include <time.h>
 #include <math.h>
 #include <wchar.h>
+#include <libgen.h>
 
 /*
 * Function: readLine
@@ -616,13 +617,14 @@ int handledate(char **tokens) {
 * -------------------
 * displays contents and details about the directory
 *
-* tokens: an array of strings
+* dp: a pointer to the directory
+* opendis: the name of the directory to be opened
 *
 * returns: 1 after executing the cd command
 */
-void handledir(DIR *dp) {
+void handledir(DIR *dp, char *opendis) {
     struct dirent *dir;
-    dp = opendir(".");
+    dp = opendir(opendis);
     struct stat attr;
     char time[20];
     char size[10];
@@ -1000,11 +1002,16 @@ int executeCommand(char **tokens) {
 		if(countArgs(tokens) == 0) {
 			printf(getcwd(cwd, sizeof(cwd)));
 			d = opendir(getcwd(cwd, sizeof(cwd)));
-			handledir(d);
+			handledir(d, ".");
 		} else {
 			for(int i = 1; i <= countArgs(tokens); i++) {
 				d = opendir(tokens[i]);
-				handledir(d);
+				if(d == NULL) {
+					printf("File not found\n");
+				} else {
+					printf("\nDirectory of %s\n", tokens[i]);
+					handledir(d, tokens[i]);
+				}
 			}		
 		}
 		return 1;
