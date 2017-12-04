@@ -1,5 +1,5 @@
 # ChiuShell
-###### This file is written in Markup language
+This file is written in Markup language
 
 A simulation of a Windows command line interpreter written in C.
 Final project in CMSC 125, Operating Systems
