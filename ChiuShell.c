@@ -1049,6 +1049,10 @@ int main() {
 	while(keepRunning) {
 		getDir();
 		line = readLine();
+		if(strlen(line) == 1) {
+			printf("\n");
+			continue;
+		}
 		tokens = tokenize(line, " \t\r\n\a");
 		keepRunning = executeCommand(tokens);
 		printf("\n");
